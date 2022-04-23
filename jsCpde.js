@@ -12,14 +12,15 @@ class Message {
     this.user = user;
     this.text = text;
     let time = new Date();
-    this.time = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
+    this.time = time.getHours() + ':' 
+    + (time.getMinutes() >= 10 ? time.getMinutes() : '0' + time.getMinutes()) + ':' 
+    + (time.getSeconds() >= 10 ? time.getSeconds() : '0' + time.getSeconds());
   }
   generateMessageHTML() {
     return `
     <div class="message">
         <h2>${this.user == undefined ? '' : this.user.name} ${this.time}</h2>
         <p>${this.text}</p>
-        <button type='button' class='btn'>кнопка</button>
     </div>
   `;
   }
@@ -55,7 +56,7 @@ sendFormDiv.classList.add('sendForm');
 
 let sendFormHTML = `<form>
   <input name="sendInp">
-  <button type='button' class='sendBtn'>кнопка</button>
+  <button type='button' class='sendBtn'>отправить</button>
 </form>`;
 sendFormDiv.innerHTML = sendFormHTML;
 
