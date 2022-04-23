@@ -54,7 +54,7 @@ const sendFormDiv = document.createElement('div');
 sendFormDiv.classList.add('sendForm');
 
 let sendFormHTML = `<form>
-  <input name="one" value="1">
+  <input name="sendInp">
   <button type='button' class='sendBtn'>кнопка</button>
 </form>`;
 sendFormDiv.innerHTML = sendFormHTML;
@@ -67,10 +67,11 @@ const sendButton = sendFormDiv.children[0].querySelector('.sendBtn');
 sendButton.onclick = () => {
   let form = sendFormDiv.firstChild;
 
-  console.log(form);
-  messageList.push(new Message(undefined, 'sss'))
+  messageList.push(new Message(undefined, form.elements.sendInp.value))
 
   messagesDiv.innerHTML += messageList[messageList.length - 1].generateMessageHTML();
 
-  sendButton.scrollIntoView(false)
+  form.elements.sendInp.value = '';
+  window.scrollBy(0,1000)
 };
+
