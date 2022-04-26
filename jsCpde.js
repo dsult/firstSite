@@ -76,3 +76,48 @@ sendButton.onclick = () => {
   window.scrollBy(0,1000)
 };
 
+
+const userDiv = document.createElement('div');
+userDiv.classList.add('userDiv');
+body.prepend(userDiv);
+
+let loginDiv = document.createElement('div');
+loginDiv.classList.add('loginDiv');
+userDiv.append(loginDiv);
+
+let registerDiv = document.createElement('div');
+registerDiv.classList.add('registerDiv');
+userDiv.append(registerDiv);
+
+loginDiv.innerHTML = '<p class="openLgn">login</p>'
+registerDiv.innerHTML = '<p class="openRgs">register</p>'
+
+let loginForm =`<form>
+  <p></p>
+  <input name="logInp"> логин
+  <p></p>
+  <input name="pasInp"> пароль
+  <p></p>
+  <button type='button' class='loginBtn'>войти</button>
+</form>`;
+
+loginDiv.querySelector('.openLgn').onclick = () => { 
+  loginDiv.innerHTML += loginForm;
+
+  loginDiv.querySelector('.loginBtn').onclick = () => {
+    let form = loginDiv.querySelector('form');
+    console.log(userLogin(form.logInp.value, form.pasInp.value)); 
+  };
+
+};
+
+function userLogin(login, pass) {
+  if (login == '') {
+    return 'error 1';
+  }
+  if (pass == '') {
+    return 'error 2';
+  }
+
+  return 3;
+}
