@@ -106,6 +106,8 @@ loginDiv.querySelector('.openLgn').onclick = () => {
 
   loginDiv.querySelector('.loginBtn').onclick = () => {
     let form = loginDiv.querySelector('form');
+    
+    
     console.log(userLogin(form.logInp.value, form.pasInp.value)); 
   };
 
@@ -115,8 +117,14 @@ function userLogin(login, pass) {
   if (login == '') {
     return 'error 1';
   }
+
   if (pass == '') {
     return 'error 2';
+  }
+
+  console.log(login + ' ' + pass)
+  if (messageList.find(user => user.name === login && user.password === pass)) {
+    return 'успешный вход';
   }
 
   return 3;
