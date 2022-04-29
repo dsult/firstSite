@@ -26,13 +26,18 @@ class Message {
   }
 }
 
+let currentUser;
+
+let userList = [];
 let user1 = new User("default1",'123');
 let user2 = new User("default2",'pass');
+userList.push(user1)
+userList.push(user2)
 
 let messageList = [];
 messageList.push(new Message(user1, "сообщение 1"));
 messageList.push(new Message(user2, "сообщение 2 и так далее"));
-messageList.push(new Message(undefined, "сообщение без юзера"));
+messageList.push(new Message(currentUser, "сообщение без юзера"));
 
 
 const body = document.body;
@@ -68,7 +73,7 @@ const sendButton = sendFormDiv.children[0].querySelector('.sendBtn');
 sendButton.onclick = () => {
   let form = sendFormDiv.firstChild;
 
-  messageList.push(new Message(undefined, form.elements.sendInp.value))
+  messageList.push(new Message(currentUser, form.elements.sendInp.value))
 
   messagesDiv.innerHTML += messageList[messageList.length - 1].generateMessageHTML();
 
@@ -107,8 +112,28 @@ loginDiv.querySelector('.openLgn').onclick = () => {
   loginDiv.querySelector('.loginBtn').onclick = () => {
     let form = loginDiv.querySelector('form');
     
-    
-    console.log(userLogin(form.logInp.value, form.pasInp.value)); 
+    switch (userLogin(form.logInp.value, form.pasInp.value)) {
+      case 'error 1':
+        // тут мог быть код для подсветки поля красным
+        console.log('заполните поле логин')
+        break;
+      case 'error 2':
+        console.log('заполните поле пароль')
+        break;
+      case 'error 3':
+        console.log('пользователь не найден')
+        break;
+      case 'error 4':
+        console.log('пароль неверный')
+        break;
+          
+      case 'entre':
+        userDiv.innerHTML='вы вошли как ' + currentUser.name;
+        break;
+      default:
+        break;
+    }
+
   };
 
 };
@@ -121,11 +146,15 @@ function userLogin(login, pass) {
   if (pass == '') {
     return 'error 2';
   }
-
-  console.log(login + ' ' + pass)
-  if (messageList.find(user => user.name === login && user.password === pass)) {
-    return 'успешный вход';
+  let findUser = userList.find(user => user.name === login);
+  if (findUser == undefined) {
+    return 'error 3';
   }
 
-  return 3;
+  if (findUser.pass !== pass) {
+    return 'error 4';
+  }
+
+  currentUser = findUser;
+  return 'entre';
 }
