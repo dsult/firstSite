@@ -95,7 +95,7 @@ registerDiv.classList.add('registerDiv');
 userDiv.append(registerDiv);
 
 loginDiv.innerHTML = '<p class="openLgn">login</p>'
-registerDiv.innerHTML = '<p class="openRgs">register</p>'
+registerDiv.innerHTML = '<p class="openReg">register</p>'
 
 let loginForm =`<form>
   <p></p>
@@ -115,16 +115,16 @@ loginDiv.querySelector('.openLgn').onclick = () => {
     switch (userLogin(form.logInp.value, form.pasInp.value)) {
       case 'error 1':
         // тут мог быть код для подсветки поля красным
-        console.log('заполните поле логин')
+        console.log('заполните поле логин');
         break;
       case 'error 2':
-        console.log('заполните поле пароль')
+        console.log('заполните поле пароль');
         break;
       case 'error 3':
-        console.log('пользователь не найден')
+        console.log('пользователь не найден');
         break;
       case 'error 4':
-        console.log('пароль неверный')
+        console.log('пароль неверный');
         break;
           
       case 'entre':
@@ -136,25 +136,81 @@ loginDiv.querySelector('.openLgn').onclick = () => {
 
   };
 
+  function userLogin(login, pass) {
+    if (login == '') {
+      return 'error 1';
+    }
+
+    if (pass == '') {
+      return 'error 2';
+    }
+    let findUser = userList.find(user => user.name === login);
+    if (findUser == undefined) {
+      return 'error 3';
+    }
+
+    if (findUser.pass !== pass) {
+      return 'error 4';
+    }
+
+    currentUser = findUser;
+    return 'entre';
+  }
 };
 
-function userLogin(login, pass) {
-  if (login == '') {
-    return 'error 1';
-  }
 
-  if (pass == '') {
-    return 'error 2';
-  }
-  let findUser = userList.find(user => user.name === login);
-  if (findUser == undefined) {
-    return 'error 3';
-  }
 
-  if (findUser.pass !== pass) {
-    return 'error 4';
-  }
+let registerForm =`<form>
+  <p></p>
+  <input name="logInp"> логин
+  <p></p>
+  <input name="pasInp"> пароль
+  <p></p>
+  <input name="rndInp"> любое дополнительное поле
+  <p></p>
+  <button type='button' class='regBtn'>зарегистрироваться</button>
+</form>`;
 
-  currentUser = findUser;
-  return 'entre';
-}
+registerDiv.querySelector('.openReg').onclick = () => { 
+  registerDiv.innerHTML += registerForm;
+
+  registerDiv.querySelector('.regBtn').onclick = () => {
+    let form = registerDiv.querySelector('form');
+    console.log(form);
+    switch (userRegister(form.logInp.value, form.pasInp.value, form.rndInp.value)) {
+      case 'error 1':
+        // тут мог быть код для подсветки поля красным
+        console.log('заполните поле логин');
+        break;
+      case 'error 2':
+        console.log('заполните поле пароль');
+        break;
+      case 'error 3':
+        console.log('такой пользователь уже есть');
+        break;
+      case 'entre':
+        userDiv.innerHTML='вы зарегистрировались и вошли как ' + currentUser.name;
+        break;
+      default:
+        break;
+    }
+  };
+  function userRegister(login, pass, rndField) {
+    if (login == '') {
+      return 'error 1';
+    }
+
+    if (pass == '') {
+      return 'error 2';
+    }
+
+    let findUser = userList.find(user => user.name === login);
+    if (findUser !== undefined) {
+      return 'error 3';
+    }
+
+    currentUser = new User(login, pass, rndField);
+    return 'entre';
+  }
+};
+
