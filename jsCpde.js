@@ -19,14 +19,14 @@ class Message {
   generateMessageHTML() {
     return `
     <div class="message">
-        <h2>${this.user == undefined ? '' : this.user.name} ${this.time}</h2>
+        <h2>${this.user == null ? '' : this.user.name} ${this.time}</h2>
         <p>${this.text}</p>
     </div>
   `;
   }
 }
 
-let currentUser;
+let currentUser = null;
 
 let userList = [];
 let user1 = new User("default1",'123');
@@ -61,14 +61,14 @@ sendFormDiv.classList.add('sendForm');
 
 let sendFormHTML = `<form>
   <input name="sendInp">
-  <button type='button' class='sendBtn'>отправить</button>
+  <button type='button' class='sendButton'>отправить</button>
 </form>`;
 sendFormDiv.innerHTML = sendFormHTML;
 
 body.appendChild(sendFormDiv);
 
 
-const sendButton = sendFormDiv.children[0].querySelector('.sendBtn');
+const sendButton = sendFormDiv.children[0].querySelector('.sendButton');
 
 sendButton.onclick = () => {
   let form = sendFormDiv.firstChild;
@@ -94,6 +94,16 @@ let registerDiv = document.createElement('div');
 registerDiv.classList.add('registerDiv');
 userDiv.append(registerDiv);
 
+let currentUserStatusDiv = document.createElement('div');
+currentUserStatusDiv.classList.add('currentUserStatusDiv');
+userDiv.append(currentUserStatusDiv);
+
+let exitButtonDiv = document.createElement('div');
+exitButtonDiv.classList.add('exitButtonDiv');
+userDiv.append(exitButtonDiv);
+exitButtonDiv.innerHTML = '<button class="exitButton">выйти</button>';
+exitButtonDiv.style.display = 'none';
+
 loginDiv.innerHTML = '<p class="openLgn">login</p>'
 registerDiv.innerHTML = '<p class="openReg">register</p>'
 
@@ -103,13 +113,13 @@ let loginForm =`<form>
   <p></p>
   <input name="pasInp"> пароль
   <p></p>
-  <button type='button' class='loginBtn'>войти</button>
+  <button type='button' class='loginButton'>войти</button>
 </form>`;
 
 loginDiv.querySelector('.openLgn').onclick = () => { 
   loginDiv.innerHTML += loginForm;
 
-  loginDiv.querySelector('.loginBtn').onclick = () => {
+  loginDiv.querySelector('.loginButton').onclick = () => {
     let form = loginDiv.querySelector('form');
     
     switch (userLogin(form.logInp.value, form.pasInp.value)) {
@@ -117,18 +127,26 @@ loginDiv.querySelector('.openLgn').onclick = () => {
         // тут мог быть код для подсветки поля красным
         console.log('заполните поле логин');
         break;
+
       case 'error 2':
         console.log('заполните поле пароль');
         break;
+
       case 'error 3':
         console.log('пользователь не найден');
         break;
+
       case 'error 4':
         console.log('пароль неверный');
         break;
           
       case 'entre':
-        userDiv.innerHTML='вы вошли как ' + currentUser.name;
+        registerDiv.style.display = 'none';
+        loginDiv.style.display = 'none';
+        form.logInp.value = null;
+        form.pasInp.value = null;
+        currentUserStatusDiv.innerHTML = 'вы вошли как ' + currentUser.name;
+        exitButtonDiv.style.display = '';
         break;
       default:
         break;
@@ -158,8 +176,6 @@ loginDiv.querySelector('.openLgn').onclick = () => {
   }
 };
 
-
-
 let registerForm =`<form>
   <p></p>
   <input name="logInp"> логин
@@ -168,29 +184,38 @@ let registerForm =`<form>
   <p></p>
   <input name="rndInp"> любое дополнительное поле
   <p></p>
-  <button type='button' class='regBtn'>зарегистрироваться</button>
+  <button type='button' class='regButton'>зарегистрироваться</button>
 </form>`;
 
 registerDiv.querySelector('.openReg').onclick = () => { 
   registerDiv.innerHTML += registerForm;
 
-  registerDiv.querySelector('.regBtn').onclick = () => {
+  registerDiv.querySelector('.regButton').onclick = () => {
     let form = registerDiv.querySelector('form');
-    console.log(form);
     switch (userRegister(form.logInp.value, form.pasInp.value, form.rndInp.value)) {
       case 'error 1':
         // тут мог быть код для подсветки поля красным
         console.log('заполните поле логин');
         break;
+
       case 'error 2':
         console.log('заполните поле пароль');
         break;
+
       case 'error 3':
         console.log('такой пользователь уже есть');
         break;
+
       case 'entre':
-        userDiv.innerHTML='вы зарегистрировались и вошли как ' + currentUser.name;
+        registerDiv.style.display = 'none';
+        loginDiv.style.display = 'none';
+        exitButtonDiv.style.display = '';
+        form.logInp.value = null;
+        form.pasInp.value = null;
+        form.rndInp.value = null;
+        currentUserStatusDiv.innerHTML = 'вы зарегистрировались и вошли как ' + currentUser.name;
         break;
+
       default:
         break;
     }
@@ -214,3 +239,10 @@ registerDiv.querySelector('.openReg').onclick = () => {
   }
 };
 
+exitButtonDiv.querySelector('.exitButton').onclick = () => {
+  registerDiv.style.display = '';
+  loginDiv.style.display = '';
+  currentUserStatusDiv.innerHTML = '';
+  exitButtonDiv.style.display = 'none';
+  currentUser = null;
+}
