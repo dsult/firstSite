@@ -107,7 +107,8 @@ exitButtonDiv.style.display = 'none';
 loginDiv.innerHTML = '<p class="openLgn">login</p>'
 registerDiv.innerHTML = '<p class="openReg">register</p>'
 
-let loginForm =`<form>
+
+loginDiv.innerHTML += `<form class="loginForm">
   <p></p>
   <input name="logInp"> логин
   <p></p>
@@ -115,12 +116,14 @@ let loginForm =`<form>
   <p></p>
   <button type='button' class='loginButton'>войти</button>
 </form>`;
+loginDiv.querySelector('.loginForm').style.display = 'none';
 
 loginDiv.querySelector('.openLgn').onclick = () => { 
-  loginDiv.innerHTML += loginForm;
+  let form = loginDiv.querySelector('form');
+  form.style.display = '';
 
   loginDiv.querySelector('.loginButton').onclick = () => {
-    let form = loginDiv.querySelector('form');
+    
     
     switch (userLogin(form.logInp.value, form.pasInp.value)) {
       case 'error 1':
@@ -176,7 +179,7 @@ loginDiv.querySelector('.openLgn').onclick = () => {
   }
 };
 
-let registerForm =`<form>
+let registerForm =`<form class="registerForm">
   <p></p>
   <input name="logInp"> логин
   <p></p>
@@ -186,12 +189,15 @@ let registerForm =`<form>
   <p></p>
   <button type='button' class='regButton'>зарегистрироваться</button>
 </form>`;
+registerDiv.innerHTML += registerForm;
+registerDiv.querySelector('.registerForm').style.display = 'none';
 
 registerDiv.querySelector('.openReg').onclick = () => { 
-  registerDiv.innerHTML += registerForm;
+  let form = registerDiv.querySelector('.registerForm');
+  form.style.display = '';
 
   registerDiv.querySelector('.regButton').onclick = () => {
-    let form = registerDiv.querySelector('form');
+    form.style.display = '';
     switch (userRegister(form.logInp.value, form.pasInp.value, form.rndInp.value)) {
       case 'error 1':
         // тут мог быть код для подсветки поля красным
@@ -235,11 +241,14 @@ registerDiv.querySelector('.openReg').onclick = () => {
     }
 
     currentUser = new User(login, pass, rndField);
+    userList.push(currentUser);
     return 'entre';
   }
 };
 
 exitButtonDiv.querySelector('.exitButton').onclick = () => {
+  body.querySelector('.registerForm').style.display = 'none';
+  body.querySelector('.loginForm').style.display = 'none';
   registerDiv.style.display = '';
   loginDiv.style.display = '';
   currentUserStatusDiv.innerHTML = '';
